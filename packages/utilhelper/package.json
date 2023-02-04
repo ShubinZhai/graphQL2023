@@ -1,5 +1,5 @@
 {
-  "name": "utilhelper",
+  "name": "@sbz/utilhelper",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {

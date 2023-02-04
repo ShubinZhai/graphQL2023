@@ -15,6 +15,6 @@
     "react": "^18.2.0",
     "tsconfig": "workspace:*",
     "typescript": "^4.5.2",
-    "utilhelper": "workspace:*"
+    "@sbz/utilhelper": "workspace:*"
   }
 }
