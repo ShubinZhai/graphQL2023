@@ -77,11 +77,13 @@ importers:
       tsconfig: workspace:*
       typescript: ^4.5.3
       ui: workspace:*
+      utilhelper: workspace:*
     dependencies:
       next: 13.1.6_pjwopsidmaokadturxaafygjp4
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       ui: link:../../packages/ui
+      utilhelper: link:../../packages/utilhelper
     devDependencies:
       '@babel/core': 7.20.12
       '@types/node': 17.0.45
@@ -121,6 +123,7 @@ importers:
       react: ^18.2.0
       tsconfig: workspace:*
       typescript: ^4.5.2
+      utilhelper: workspace:*
     devDependencies:
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
@@ -128,6 +131,13 @@ importers:
       eslint-config-custom: link:../eslint-config-custom
       react: 18.2.0
       tsconfig: link:../tsconfig
+      typescript: 4.9.5
+      utilhelper: link:../utilhelper
+
+  packages/utilhelper:
+    specifiers:
+      typescript: ^4.9.5
+    dependencies:
       typescript: 4.9.5
 
 packages:
