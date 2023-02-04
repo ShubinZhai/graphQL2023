@@ -5,7 +5,6 @@ module.exports = {
     "body-empty":[1, "never",0],
     "subject-empty":[0, "never",0],
     "type-empty":[0, "never",0]
-
   }
 
 }
