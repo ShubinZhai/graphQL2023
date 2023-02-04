@@ -1,0 +1,8 @@
+{
+  "name": "utilhelper",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "typescript": "^4.9.5"
+  }
+}
