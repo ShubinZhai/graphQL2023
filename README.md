@@ -1,3 +1,13 @@
+# Customized Note
+The purpose of this repo is to use turbo.build and pnpm for faster build and packaging.  It is intended as a base monorepo where other project is based on.
+
+This repo is based on turbo.build monorepo starter kit with following added:
+1) changesets
+2.) husky
+3.) commitlint
+4.) ts-jest
+5.) next, react and react-dom
+
 # Turborepo starter
 
 This is an official pnpm starter turborepo.
