@@ -1,9 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["APOLLO_KEY", "NODE_ENV"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
+      "env": ["APOLLO_KEY", "NODE_ENV"],
       "outputs": ["dist/**", ".next/**"]
     },
     "lint": {
