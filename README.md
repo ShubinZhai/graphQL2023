@@ -1,6 +1,6 @@
 # Customized Note
 # Goal
-Explore different solution patterns for gql for "application | data" centric use cases
+Explore different gql solution patterns "application | data" centric heavy-read use cases
 
 # Motivation
 1. Moving to Apollo 4 due to deprecation of Apollo 3 in Oct. 2023 (WIP)
