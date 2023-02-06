@@ -39,4 +39,4 @@ const server = new ApolloServer({
 await server.start();
 app.use('/graphql', cors(), json());
 await new Promise((resolve) => httpServer.listen({ port: 4002 }));
-console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+console.log(`🚀 Server ready at http://localhost:4002/graphql`);
