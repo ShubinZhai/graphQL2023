@@ -1,0 +1,11 @@
+node_modules
+.husky/*
+.github/*
+.vscode/*
+.eslintcache
+.eslint-cache
+.jestcache
+.jest-cache
+.tscache
+.tsc-cache
+docs
