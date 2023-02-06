@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  gql-book:
+    container_name: gql-book
+    restart: always
+    cache_from:
+      - gql-book:latest
+    image: gql-book
+    context: .
+    dockerfile: ./apps/apollo/gql-book/Dockerfile
+    args:
+      -BuildkitInlineCache=1
+      -BuildkitCache=type=registry,ref=gql-book:latest
+      -APP_ENV=development
+      -APP_PORT=4001
+      - NODE_ENV=development
+    env_file:
+      - fileName =.env
+    environment:
+      - APP_PORT=4001
+      -NODE_ENV=debug
+    networks:
+      - networkName
+    ports:
+      - 4001:4001
+    build: .
+    ports:
+      - 4000:4000
+    volumes:
+      - .:/app  
+    command: npm run dev
+    depends_on:
+      - mongo 
+  mongo:  
+    image: mongo
+    container_name: mongo
+    ports:
+      - 27017:27017
+      - 28017:28017
+    volumes:
+      - ./data:/data/db
+  
