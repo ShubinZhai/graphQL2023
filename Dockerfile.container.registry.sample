@@ -1,46 +1,68 @@
-ARG APP_PATH = /apollo
-ARG APP_NAME = gql-book
-ARG APP_VERSION = 0.0.1
-ARG APP_IMAGE = ${ APP_NAME } : ${ APP_VERSION }
-ARG DOCKER_REGISTRY = docker.io
-ARG APP_IMAGE_TAG = ${ APP_IMAGE } - ${ DOCKER_REGISTRY }
-ARG APP_IMAGE_TAG_LATEST = ${ APP_IMAGE } - ${ DOCKER_REGISTRY } :latest
-ARG APP_IMAGE_TAG_VERSION = ${ APP_IMAGE } - ${ DOCKER_REGISTRY } : ${ APP_VERSION }
-ARG APP_IMAGE_TAG_LATEST_VERSION = ${ APP_IMAGE } - ${ DOCKER_REGISTRY } :latest- ${ APP_VERSION }
-ARG APP_IMAGE_TAG_LATEST_VERSION_SHA = ${ APP_IMAGE } - ${ DOCKER_REGISTRY } :latest- ${ APP_VERSION } - ${ GITHUB_SHA :: 7 }
-ARG APP_IMAGE_TAG_LATEST_VERSION_SHA_BRANCH = ${ APP_IMAGE } - ${ DOCKER_REGISTRY } :latest- ${ APP_VERSION } - ${ GITHUB_SHA :: 7 } - ${ GITHUB_REF :: 11 }    
-ARG APP_IMAGE_TAG_LATEST_VERSION_SHA_BRANCH_TAG = ${ APP_IMAGE } - ${ DOCKER_REGISTRY } :latest- ${ APP_VERSION } - ${ GITHUB_SHA :: 7 } - ${ GITHUB_REF :: 11 } - ${ GITHUB_REF_TAG :: 11 }
-ARG APP_IMAGE_TAG_LATEST_VERSION_SHA_BRANCH_TAG_PR = ${ APP_IMAGE } - ${ DOCKER_REGISTRY } :latest- ${ APP_VERSION } - ${ GITHUB_SHA :: 7 } - ${ GITHUB_REF :: 11 } - ${ GITHUB_REF_TAG :: 11 } - ${ GITHUB_HEAD_REF :: 11 } - ${ GITHUB_BASE_REF :: 11 } - ${ GITHUB_EVENT_NUMBER :: 11 } dest
 
-FROM ${ DOCKER_REGISTRY } / ${ APP_NAME } / ${ APP_NAME } : ${ APP_VERSION } - ${ DOCKER_REGISTRY } AS release
-ARG APP_PATH
 
-user root
+FROM node:12.16.1-alpine3.9
+RUN npm install -g pnpm
+RUN npm install -g turbo
 
-WORKDIR /the/workdir/${APP_PATH}
+USER root
 
-COPY \
-    ./${APP_PATH} \
-    /the/workdir/${APP_PATH}
+ENV TERM=xterm-256color
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV PATH=$PATH:/home/node/.npm-global/bin
 
-run turbo build
+RUN mkdir -p /usr/src/app
+COPY ./auth/* /usr/src/app/auth
 
-user node
+# get around local proxy to prevent intercepting http/https traffic
+RUN  --mount=type=cache,target=var/cache/apk\
+    set -eux && \
+    && export \
+    http_proxy = http:\\proxy.example.com:8080 \
+    https_proxy = https:\\proxy.example.com:8080 \
+    && apk add somecertificate \
+    && rm existing certificate \
+    &&chmod 644 certdirctory \
+    && cp certpath to certdirectory \
+    && unset http_proxy https_proxy
+    
 
-ENV APP_PORT 4001
+RUN --mount=type=secret,id=auth,dst=/usr/src/app/auth/credentials.json \
+    --mount=type=secret,id=auth,dst=/usr/src/app/auth/token.json \
+    cd /usr/src/app/auth && \
+    npm install && \
+    npm run build
+RUN --mount=type=cahe,target=/var/cache/apk \
+    set -eux && \
+    ln -vs /usr/bin/python3 /usr/bin/python && \
+    apk add --no-cache --virtual .build-deps \
+    coreutils \
+    gcc \
+    g++ \
+    make \
+    python3 \
+    && npm install -g --unsafe-perm=true --allow-root \
+    && apk del .build-deps
 
-EXPOSE ${APP_PORT}
+# Create app directory
+RUN set -eux \
+    mkdir -p /usr/src/app \
+    && chown -R node:node /usr/src/app \
+    /usr/src/app
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+# COPY files, note package.json and package-lock.json before other files
+WORKDIR /usr/src/app
+COPY --chown=node:node . /usr/src/app
+COPY ./auth/* /usr/src/app/auth
 
-ARG NODE_CONFIG_DIR=/the/workdir/${APP_PATH}/config
-ENV NODE_CONFIG_DIR=${NODE_CONFIG_DIR}
+# Install app dependencies
+COPY package*.json ./
+RUN pnpm install
 
-ARG TAG_NAME
-ENV TAG_NAME=${TAG_NAME}
+# Bundle app source
+RUN turbo build
 
-CMD [ "node", "-r", "esm", "--max-http-header-size", "32768", "src/index.js" ]
+
+
 
 
 
